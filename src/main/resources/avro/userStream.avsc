@@ -1,0 +1,22 @@
+{
+	"type": "record",
+	"name": "UserStream",
+	"namespace": "com.training.pojos.generatedSources",
+	"fields": [{
+		"name": "registertime",
+		"type": ["null", "long"],
+		"default": null
+	}, {
+		"name": "userid",
+		"type": ["null", "string"],
+		"default": null
+	}, {
+		"name": "regionid",
+		"type": ["null", "string"],
+		"default": null
+	}, {
+		"name": "gender",
+		"type": ["null", "string"],
+		"default": null
+	}]
+}
