@@ -3,13 +3,14 @@ package com.training.pojos;
 import com.fasterxml.jackson.dataformat.avro.AvroMapper;
 import com.fasterxml.jackson.dataformat.avro.AvroSchema;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Data
+@Getter
+@Setter
 public class Users {
     private String name, favorite_color;
     private int favorite_number;
@@ -20,6 +21,30 @@ public class Users {
     public Users(String name, String favorite_color, int favorite_number) {
         this.name = name;
         this.favorite_color = favorite_color;
+        this.favorite_number = favorite_number;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFavorite_color() {
+        return favorite_color;
+    }
+
+    public void setFavorite_color(String favorite_color) {
+        this.favorite_color = favorite_color;
+    }
+
+    public int getFavorite_number() {
+        return favorite_number;
+    }
+
+    public void setFavorite_number(int favorite_number) {
         this.favorite_number = favorite_number;
     }
 
@@ -36,7 +61,7 @@ public class Users {
                 "}";
     }
 
-    public static AvroSchema getUsersSchema(){
+    public static AvroSchema getUsersSchema() {
         AvroMapper mapper = new AvroMapper();
         AvroSchema schema = null;
         try {

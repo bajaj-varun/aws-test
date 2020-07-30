@@ -84,7 +84,7 @@ public class UserConsumer {
             });*/
 
             Dataset df = spark.createDataFrame(rdd0.map(x->x.value()),Users.class);
-            df.printSchema();
+            //df.printSchema();
             df.show(10);
         });
 
