@@ -5,12 +5,10 @@ import com.training.pojos.Users;
 import com.training.serde.UserSerDe;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.sql.DataFrameReader;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
-import org.apache.spark.sql.hive.HiveContext;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -18,10 +16,7 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class UserConsumer {
 
@@ -64,9 +59,14 @@ public class UserConsumer {
 
     public void getUserData1() {
         SparkConf conf = new SparkConf().setAppName("UserSparkStream").setMaster(IKafkaConstants.MASTER);
-        JavaStreamingContext ssc = new JavaStreamingContext(conf, Duration.apply(1000));
+        JavaStreamingContext ssc = new JavaStreamingContext(conf, Duration.apply(5000));
         SparkSession spark = new SparkSession(ssc.sparkContext().sc());
-       // HiveContext hc = new HiveContext(ssc.sparkContext());
+	ssc.sparkContext().setLogLevel("ERROR");
+
+        // HiveContext hc = new HiveContext(ssc.sparkContext());
+
+        final int minBatchSize = 200;
+        List<Users> buffer = new ArrayList<>();
 
         Collection<String> topics = Arrays.asList(IKafkaConstants.USERS_TOPIC);
 
@@ -80,14 +80,18 @@ public class UserConsumer {
         stream.foreachRDD(rdd0 -> {
             /*rdd0.foreach(row -> {
                 Users users = row.value();
+                buffer.add(users);
                 System.out.println(users.toString());
             });*/
 
-            Dataset df = spark.createDataFrame(rdd0.map(x->x.value()),Users.class);
-            //df.printSchema();
-            df.show(10);
+            Dataset ds = spark.createDataFrame(rdd0.map(x -> x.value()), Users.class);
+            //ds.printSchema();
+            ds.show(10);
+            ds.write()
+                .format("parquet")
+                .mode(SaveMode.Append)
+                .save(IKafkaConstants.NAMENODE_PATH);
         });
-
 
         ssc.start();
         try {
@@ -98,3 +102,4 @@ public class UserConsumer {
     }
 
 }
+

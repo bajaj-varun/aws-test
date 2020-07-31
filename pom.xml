@@ -41,19 +41,29 @@
             </plugin>
 
 
-            <!--<plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>fully.qualified.MainClass</mainClass>
-                        </manifest>
-                    </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                </configuration>
-            </plugin>-->
+	    <plugin>
+		    <artifactId>maven-assembly-plugin</artifactId>
+		    <configuration>
+			    <archive>
+				    <manifest>
+					    <mainClass>com.training.sparkConsumers.UserConsumer</mainClass>
+				    </manifest>
+			    </archive>
+			    <descriptorRefs>
+				    <descriptorRef>jar-with-dependencies</descriptorRef>
+			    </descriptorRefs>
+		    </configuration>
+		    <executions>
+			    <execution>
+				    <id>make-assembly</id>
+					    <!-- bind to the packaging phase -->
+				    <phase>package</phase>
+				    <goals>
+					    <goal>single</goal>
+				    </goals>
+			    </execution>
+		    </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -104,8 +114,8 @@
         <!--Spark support-->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql_2.12</artifactId>
-            <version>3.0.0</version>
+            <artifactId>spark-sql_2.11</artifactId>
+            <version>2.4.5</version>
         </dependency>
         <!--<dependency>
             <groupId>org.apache.spark</groupId>
@@ -114,24 +124,24 @@
         </dependency>-->
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-sql-kafka-0-10_2.12</artifactId>
-            <version>3.0.0</version>
+            <artifactId>spark-sql-kafka-0-10_2.11</artifactId>
+            <version>2.4.5</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming_2.12</artifactId>
-            <version>3.0.0</version>
+            <artifactId>spark-streaming_2.11</artifactId>
+            <version>2.4.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-hive_2.12</artifactId>
-            <version>3.0.0</version>
+            <artifactId>spark-hive_2.11</artifactId>
+            <version>2.4.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-streaming-kafka-0-10_2.12</artifactId>
-            <version>3.0.0</version>
+            <artifactId>spark-streaming-kafka-0-10_2.11</artifactId>
+            <version>2.4.5</version>
         </dependency>
 
         <!--MongoDB stuff-->
