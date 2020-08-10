@@ -34,4 +34,8 @@ public class MovieConsumer {
             });
         }
     }
+
+    public static class FlightsStreamConsumer {
+
+    }
 }

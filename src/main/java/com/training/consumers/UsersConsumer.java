@@ -40,7 +40,7 @@ public class UsersConsumer {
 
                 if (buffer.size() >= minBatchSize) {
                     // Store data to DB
-                    mongoConnect.insertIntoDB(buffer);
+                    mongoConnect.insertIntoDB(buffer, IKafkaConstants.USERS_MONGO_DB, "users");
                     consumer.commitSync();
                     buffer.clear();
                 }
@@ -49,44 +49,3 @@ public class UsersConsumer {
     }
 }
 
-/**
- * TODO: JavaDoc
- */
-class MongoConnect {
-
-    static MongoConnect mongoConnect = null;
-    static MongoDatabase db = null;
-
-    private MongoConnect() {
-    }
-
-    public static MongoConnect getInstance() {
-        if (mongoConnect == null) {
-            mongoConnect = new MongoConnect();
-
-            // Some homework
-            db = mongoConnect.getMongoDB();
-        }
-
-        return mongoConnect;
-    }
-
-    private MongoDatabase getMongoDB() {
-        MongoClient mongoClient = MongoClients.create(IKafkaConstants.MONGO_CONN_STRING);
-        MongoDatabase db = mongoClient.getDatabase(IKafkaConstants.USERS_MONGO_DB);
-
-        return db;
-    }
-
-    Document getUserDocument(Users u) {
-        return new Document("name", u.getName())
-                .append("favorite_color", u.getFavorite_color())
-                .append("favorite_number", u.getFavorite_number());
-    }
-
-    void insertIntoDB(List<Document> buffer) {
-        MongoCollection collection = db.getCollection(IKafkaConstants.USERS_MONGO_DB);
-        collection.insertMany(buffer);
-    }
-
-}
