@@ -31,7 +31,7 @@ The data consists of flight arrival and departure details for all commercial fli
 </tr>
 </table>
 
-**Source data details**<br/>
+**Source data details**
 Download the stats created for year 2008 & 2007.<br/>
 http://stat-computing.org/dataexpo/2009/the-data.html
 
