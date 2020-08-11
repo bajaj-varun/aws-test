@@ -19,37 +19,25 @@ public class Prod1 {
         Producer<String, String> producer = new KafkaProducer(props);
 
         while(true) {
-            String str = new Prod1().getRandomString();
+
+            String str = "Test-Value-"+count++;//new Prod1().getRandomString();
             ProducerRecord<String, String> producerRecord = new ProducerRecord(IKafkaConstants.T0_TOPIC, "Test", str);
-            producer.send(producerRecord
-                    , (recordMetadata, e) -> {
-                if (e == null) {
-                    System.out.println(recordMetadata.toString());
-                } else {
-                    e.printStackTrace();
-                }
-            }
-           ).get();
-            System.out.println("Key=" + (count++));
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            producer.send(producerRecord);
+            Thread.sleep(100);
         }
     }
-
-    private String getRandomString(){
-            int leftLimit = 97; // letter 'a'
-            int rightLimit = 122; // letter 'z'
-            int targetStringLength = 5;
-            Random random = new Random();
-
-            String generatedString = random.ints(leftLimit, rightLimit + 1)
-                    .limit(targetStringLength)
-                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                    .toString();
-
-            return generatedString;
-    }
 }
+
+    /*private String getRandomString(){
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = 5;
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
+    }*/

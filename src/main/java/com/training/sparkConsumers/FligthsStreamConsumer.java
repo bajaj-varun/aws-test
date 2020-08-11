@@ -15,6 +15,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.VoidFunction;
 import org.apache.spark.sql.*;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
@@ -23,6 +24,7 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
+import org.codehaus.janino.Java;
 import scala.Tuple2;
 
 import java.util.ArrayList;
@@ -89,7 +91,12 @@ public class FligthsStreamConsumer {
         JavaDStream<ConsumerRecord<String, FlightDataAvroSchema>> stream = getFlightDataStream();
         Dataset<Row> pd = spark.createDataFrame(listPlaneData, PlaneData.class);
 
-        JavaDStream fld = stream.map(cr -> cr.value());
+        JavaDStream<FlightDataAvroSchema> fld = stream.map(cr -> cr.value());
+        fld.foreachRDD(x->{
+            Dataset<Row> fl = spark.createDataFrame(x.rdd(),FlightDataAvroSchema.class);
+            fl.join(pd,fl.col("TailNum").equalTo(pd.col("tailnum"))).show(10);
+        });
+
         //KStream<String, FlightDataAvroSchema> kStream = stream;
         //Dataset<Row> fl = spark.createDataset(fld, FlightDataAvroSchema.class);
         //fld.dstream().;
