@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bson.Document;
 import org.spark_project.jetty.util.Fields;
+import scala.Serializable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,7 +19,7 @@ import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
 @Data
-public class FlightsData{
+public class FlightsData implements Serializable {
     private Long Year;
     private Long Month;
     private Long DayofMonth;
@@ -50,7 +51,7 @@ public class FlightsData{
     private String LateAircraftDelay;
 
 
-    public FlightDataAvroSchema getFlightAvroData() {
+    /*public FlightDataAvroSchema getFlightAvroData() {
         FlightDataAvroSchema data = new FlightDataAvroSchema();
         data.setYear(this.Year);
         data.setMonth(this.Year);
@@ -83,7 +84,7 @@ public class FlightsData{
         data.setSecurityDelay(this.SecurityDelay);
         data.setLateAircraftDelay(this.LateAircraftDelay);
         return data;
-    }
+    }*/
 
     public FlightsData(){
 
@@ -121,15 +122,136 @@ public class FlightsData{
         LateAircraftDelay   = arr[28];
     }
 
-    public FlightsData(FlightDataAvroSchema fl){
+    /*public FlightsData(FlightDataAvroSchema fl){
         Field[] fields = FlightsData.class.getDeclaredFields();
-        for(Field field: fields){
+        for(Field f: fields){
+            Class<?> type = f.getType();
             try {
-                field.set(this,fl.get(field.getName()));
+                if(type.equals(Long.class))
+                    f.set(this,fl.get(f.getName()));
+                else {
+                    f.set(this, fl.get(f.getName()).toString());
+                }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
+    }*/
+
+    public Long getYear() {
+        return Year;
+    }
+
+    public Long getMonth() {
+        return Month;
+    }
+
+    public Long getDayofMonth() {
+        return DayofMonth;
+    }
+
+    public Long getDayOfWeek() {
+        return DayOfWeek;
+    }
+
+    public Long getDepTime() {
+        return DepTime;
+    }
+
+    public Long getCRSDepTime() {
+        return CRSDepTime;
+    }
+
+    public Long getArrTime() {
+        return ArrTime;
+    }
+
+    public Long getCRSArrTime() {
+        return CRSArrTime;
+    }
+
+    public String getUniqueCarrier() {
+        return UniqueCarrier;
+    }
+
+    public Long getFlightNum() {
+        return FlightNum;
+    }
+
+    public String getTailNum() {
+        return TailNum;
+    }
+
+    public Long getActualElapsedTime() {
+        return ActualElapsedTime;
+    }
+
+    public Long getCRSElapsedTime() {
+        return CRSElapsedTime;
+    }
+
+    public Long getAirTime() {
+        return AirTime;
+    }
+
+    public Long getArrDelay() {
+        return ArrDelay;
+    }
+
+    public Long getDepDelay() {
+        return DepDelay;
+    }
+
+    public String getOrigin() {
+        return Origin;
+    }
+
+    public String getDest() {
+        return Dest;
+    }
+
+    public Long getDistance() {
+        return Distance;
+    }
+
+    public Long getTaxiIn() {
+        return TaxiIn;
+    }
+
+    public Long getTaxiOut() {
+        return TaxiOut;
+    }
+
+    public Long getCancelled() {
+        return Cancelled;
+    }
+
+    public String getCancellationCode() {
+        return CancellationCode;
+    }
+
+    public String getDiverted() {
+        return Diverted;
+    }
+
+    public String getCarrierDelay() {
+        return CarrierDelay;
+    }
+
+    public String getWeatherDelay() {
+        return WeatherDelay;
+    }
+
+    public String getNASDelay() {
+        return NASDelay;
+    }
+
+    public String getSecurityDelay() {
+        return SecurityDelay;
+    }
+
+    public String getLateAircraftDelay() {
+        return LateAircraftDelay;
     }
 
     public Document getFlightDataDocumentFromStr(String[] arr) {

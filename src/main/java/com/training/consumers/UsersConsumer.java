@@ -29,6 +29,8 @@ public class UsersConsumer {
 
         Consumer<String, Users> consumer = new KafkaConsumer(props);
         consumer.subscribe(Collections.singleton(IKafkaConstants.USERS_TOPIC));
+        // Read last commited offset, start consuming from offset
+
         final int minBatchSize = 200;
         List<Document> buffer = new ArrayList<>();
         MongoConnect mongoConnect = MongoConnect.getInstance();
@@ -41,6 +43,7 @@ public class UsersConsumer {
                 if (buffer.size() >= minBatchSize) {
                     // Store data to DB
                     mongoConnect.insertIntoDB(buffer, IKafkaConstants.USERS_MONGO_DB, "users");
+                    // Commit offset
                     consumer.commitSync();
                     buffer.clear();
                 }

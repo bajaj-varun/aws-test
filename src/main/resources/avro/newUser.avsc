@@ -1,0 +1,12 @@
+{"namespace": "com.training.pojos.generatedSources",
+ "type": "record",
+ "name": "PojoUserAvro",
+ "fields": [
+     {"name": "name", "type": ["string", "null"]},
+     {"name": "favorite_number",  "type": ["int","null"]},
+     {"name": "favorite_color", "type": ["string","null"]},
+     {"name": "language", "type": ["string","null"]},
+     {"name": "nativePlace", "type": ["string","null"]},
+     {"name": "hobbies", "type": ["string","null"]}
+ ]
+}

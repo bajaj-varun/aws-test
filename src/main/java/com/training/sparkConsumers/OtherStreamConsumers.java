@@ -7,7 +7,10 @@ import com.training.pojos.PlaneData;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaInputDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -18,9 +21,24 @@ import org.apache.spark.streaming.kafka010.LocationStrategies;
 import java.util.*;
 
 public class OtherStreamConsumers {
-    private static final SparkConf conf = FligthsStreamConsumer.conf;
-    private static final JavaStreamingContext ssc = FligthsStreamConsumer.ssc;
-    private final SparkSession spark = FligthsStreamConsumer.spark;
+    public static final SparkConf conf = new SparkConf().setAppName("OtherStreamApplication").setMaster(IKafkaConstants.MASTER);
+    public static final JavaStreamingContext ssc = new JavaStreamingContext(conf, Duration.apply(5000));
+    public static SparkSession spark = new SparkSession(ssc.sparkContext().sc());
+
+    public static void main(String[] args) {
+        ssc.sparkContext().setLogLevel("ERROR");
+
+        OtherStreamConsumers consumer = new OtherStreamConsumers();
+        consumer.getPlanesData();
+        consumer.getAirportsData();
+
+        ssc.start();
+        try {
+            ssc.awaitTermination();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private Map<String, Object> getProperties() {
         Map<String, Object> kafkaParams = new HashMap<>();
@@ -53,35 +71,29 @@ public class OtherStreamConsumers {
         return rdd;
     }
 
-    public List<PlaneData> getPlanesData() {
+    public void getPlanesData() {
         JavaInputDStream<ConsumerRecord<String, String>> stream = getDataStream(IKafkaConstants.PLANE_DATA_TOPIC);
-        List<PlaneData> lstPd = new ArrayList<>();
-        JavaDStream<PlaneData> rdd = stream.map(cr -> {
-            String str = cr.value().replace("\"", "").trim();
-            PlaneData pd = new PlaneData(cr.value().split(","));
-            lstPd.add(pd);
-            return pd;
-        });
-        return lstPd;
+        stream.foreachRDD(rdd ->
+                spark.createDataFrame(
+                        rdd.map(x -> new PlaneData(x.value().split(","))), PlaneData.class)
+                        .as(Encoders.bean(PlaneData.class))
+                        .write()
+                        .partitionBy("year", "model")
+                        .mode(SaveMode.Append)
+                        .parquet(IKafkaConstants.PLANE_DATA_PATH)
+        );
     }
 
-    public List<Airports> getAirportsData() {
+    public void getAirportsData() {
         JavaInputDStream<ConsumerRecord<String, String>> stream = getDataStream(IKafkaConstants.AIRPORTS_TOPIC);
-        List<Airports> lstAirports = new ArrayList<>();
-
-        JavaDStream<Airports> rdd = stream.map(cr -> {
-            String str = cr.value().replace("\"", "").trim();
-            Airports ar = new Airports(str.split(","));
-            lstAirports.add(ar);
-            return ar;
-        });
-        return lstAirports;
+        stream.foreachRDD(rdd ->
+                spark.createDataFrame(
+                        rdd.map(x -> new Airports(x.value().split(","))), Airports.class)
+                        .as(Encoders.bean(Airports.class))
+                        .write()
+                        .partitionBy("country")
+                        .mode(SaveMode.Append)
+                        .parquet(IKafkaConstants.AIRPORTS_DATA_PATH)
+        );
     }
 }
-
-// TODO: as we write to disk, empty the list
-/*flightsDataSet
-    .write()
-    .format("parquet")
-    .mode(SaveMode.Append)
-    .save(IKafkaConstants.NAMENODE_PATH);*/

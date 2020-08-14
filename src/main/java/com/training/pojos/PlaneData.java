@@ -1,6 +1,7 @@
 package com.training.pojos;
 
 import lombok.Data;
+import org.apache.commons.lang.math.NumberUtils;
 import scala.Serializable;
 
 import java.lang.reflect.Field;
@@ -28,7 +29,7 @@ public class PlaneData implements Serializable {
                 str = arr[i];
             try {
                 if(type.equals(Integer.class))
-                    f.set(this,(str!=null)?Integer.parseInt(str):-999);
+                    f.set(this,(str!=null && NumberUtils.isNumber(str))?Integer.parseInt(str):-999);
                 else
                     f.set(this, str);
             } catch (IllegalAccessException e) {

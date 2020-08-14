@@ -2,6 +2,7 @@ package com.training.consumers;
 
 import com.training.IKafkaConstants;
 import com.training.pojos.FlightsData;
+import com.training.pojos.PlaneData;
 import com.training.pojos.generatedSources.FlightDataAvroSchema;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
@@ -31,8 +32,8 @@ import java.util.*;
 public class FlightsConsumer {
 
     public static void main(String[] args) {
-       // new FlightsConsumer().consumeFlightsRawData();
-        new FlightsConsumer().consumeAvroFlightData();
+       new FlightsConsumer().consumeFlightsRawData();
+       //new FlightsConsumer().consumeAvroFlightData();
     }
 
     private Properties getProperties() {
@@ -85,13 +86,15 @@ public class FlightsConsumer {
 
         StreamsBuilder builder = new StreamsBuilder();
         KStream<String, FlightDataAvroSchema> flightDataStream = builder.stream(IKafkaConstants.AVRO_FLIGHT_TOPIC);
-
+ //       KStream<String, PlaneData> pdStream = builder.stream(IKafkaConstants.PLANE_DATA_TOPIC);
         // Print on console
         // flightDataStream.foreach((k,v) -> System.out.println(k+"--"+v.toString()));
         flightDataStream.print(Printed.toSysOut());
+//        pdStream.foreach((k,v)-> System.out.println("Key =>"+k+" = "+" Value=>"+v));
+
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
-        //streams.cleanUp();
+        streams.cleanUp();
         streams.start();
 
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
