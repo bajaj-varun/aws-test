@@ -1,18 +1,18 @@
-#TODO: Case study Blog and AWS services use
+<H1>TODO: Case study Blog and AWS services use</H1>
 
-###Use-Case: Airline on-time performance
+<h3>Use-Case: Airline on-time performance</h3>
 
-Reference Link: http://stat-computing.org/dataexpo/2009/
+Reference Link: <a href="http://stat-computing.org/dataexpo/2009/">http://stat-computing.org/dataexpo/2009/</a>
 
 Have you ever been stuck in an airport because your flight was delayed or cancelled and wondered if you could have predicted it if you'd had more data? This is your chance to find out.
 
-**The data**<br/>
+<h4>The data</h4>
 The data consists of flight arrival and departure details for all commercial flights within the USA, from October 1987 to April 2008. This is a large dataset: there are nearly 120 million records in total, and takes up 1.6 gigabytes of space compressed and 12 gigabytes when uncompressed. 
 
 
-###**Batch Ingestion & Processing**
+<h4>Batch Ingestion & Processing</h4>
 
-**Hadoop directory Structure to be created**.
+<b>Hadoop directory Structure to be created</b>.
 <table>
 <tr>
 <td>Layer</td><td>Directory Path</td><td>File Format</td>		
