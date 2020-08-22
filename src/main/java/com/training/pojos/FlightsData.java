@@ -51,7 +51,7 @@ public class FlightsData implements Serializable {
     private String LateAircraftDelay;
 
 
-    /*public FlightDataAvroSchema getFlightAvroData() {
+    public FlightDataAvroSchema getFlightAvroData() {
         FlightDataAvroSchema data = new FlightDataAvroSchema();
         data.setYear(this.Year);
         data.setMonth(this.Year);
@@ -84,7 +84,7 @@ public class FlightsData implements Serializable {
         data.setSecurityDelay(this.SecurityDelay);
         data.setLateAircraftDelay(this.LateAircraftDelay);
         return data;
-    }*/
+    }
 
     public FlightsData(){
 
@@ -122,7 +122,7 @@ public class FlightsData implements Serializable {
         LateAircraftDelay   = arr[28];
     }
 
-    /*public FlightsData(FlightDataAvroSchema fl){
+    public FlightsData(FlightDataAvroSchema fl){
         Field[] fields = FlightsData.class.getDeclaredFields();
         for(Field f: fields){
             Class<?> type = f.getType();
@@ -136,7 +136,7 @@ public class FlightsData implements Serializable {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
 
     public Long getYear() {
         return Year;

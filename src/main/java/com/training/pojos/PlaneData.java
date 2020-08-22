@@ -1,11 +1,11 @@
 package com.training.pojos;
 
+import com.training.pojos.generatedSources.PlanesDataAvroSchema;
 import lombok.Data;
 import org.apache.commons.lang.math.NumberUtils;
 import scala.Serializable;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 @Data
 public class PlaneData implements Serializable {
@@ -19,16 +19,19 @@ public class PlaneData implements Serializable {
     private String engine_type;
     private Integer year;
 
+    public PlaneData(){
+
+    }
+
     public PlaneData(String[] arr) {
         Field[] fields = this.getClass().getDeclaredFields();
         for(int i=0; i< fields.length; i++){
             Field f = fields[i];
             Class<?> type = f.getType();
             String str = null;
-            if(arr.length > i && arr[i] != null)
-                str = arr[i];
+            str = (arr.length > i && arr[i] != null) ? arr[i] :"" ;
             try {
-                if(type.equals(Integer.class))
+                if(type.equals(Integer.class) || type.equals(int.class))
                     f.set(this,(str!=null && NumberUtils.isNumber(str))?Integer.parseInt(str):-999);
                 else
                     f.set(this, str);
@@ -36,6 +39,21 @@ public class PlaneData implements Serializable {
                 e.printStackTrace();
             }
         }
+    }
+
+    public PlanesDataAvroSchema getPlaneDataAvroSchema(String[] arr){
+        PlaneData pd = new PlaneData(arr);
+        PlanesDataAvroSchema pda = new PlanesDataAvroSchema();
+        pda.setAircraftType(pd.getAircraft_type());
+        pda.setEngineType(pd.getEngine_type());
+        pda.setIssueDate(pd.getIssue_date());
+        pda.setManufacturer(pd.getManufacturer());
+        pda.setModel(pd.getModel());
+        pda.setStatus(pd.getStatus());
+        pda.setTailnum(pd.getTailnum());
+        pda.setType(pd.getType());
+        pda.setYear(pd.getYear());
+        return pda;
     }
 
     public String getTailnum() {
@@ -72,5 +90,10 @@ public class PlaneData implements Serializable {
 
     public Integer getYear() {
         return year;
+    }
+
+    @Override
+    public String toString() {
+        return tailnum +"," + type +","+ manufacturer +"," + issue_date + "," + model + ",'" + status + "," + aircraft_type + "," + engine_type + "," + year;
     }
 }

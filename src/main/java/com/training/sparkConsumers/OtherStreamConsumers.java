@@ -7,6 +7,7 @@ import com.training.pojos.PlaneData;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.spark.SparkConf;
+import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.SparkSession;
@@ -18,7 +19,9 @@ import org.apache.spark.streaming.kafka010.ConsumerStrategies;
 import org.apache.spark.streaming.kafka010.KafkaUtils;
 import org.apache.spark.streaming.kafka010.LocationStrategies;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class OtherStreamConsumers {
     public static final SparkConf conf = new SparkConf().setAppName("OtherStreamApplication").setMaster(IKafkaConstants.MASTER);
@@ -73,27 +76,29 @@ public class OtherStreamConsumers {
 
     public void getPlanesData() {
         JavaInputDStream<ConsumerRecord<String, String>> stream = getDataStream(IKafkaConstants.PLANE_DATA_TOPIC);
-        stream.foreachRDD(rdd ->
-                spark.createDataFrame(
-                        rdd.map(x -> new PlaneData(x.value().split(","))), PlaneData.class)
-                        .as(Encoders.bean(PlaneData.class))
-                        .write()
-                        .partitionBy("year", "model")
-                        .mode(SaveMode.Append)
-                        .parquet(IKafkaConstants.PLANE_DATA_PATH)
-        );
+        stream.foreachRDD(rdd -> {
+            Dataset<PlaneData> pd = spark.createDataFrame(
+                    rdd.map(x -> new PlaneData(x.value().split(","))), PlaneData.class)
+                    .as(Encoders.bean(PlaneData.class));
+            pd.show(20);
+            pd.write()
+                    .partitionBy("year", "model")
+                    .mode(SaveMode.Append)
+                    .parquet(IKafkaConstants.PLANE_DATA_PATH);
+        });
     }
 
     public void getAirportsData() {
         JavaInputDStream<ConsumerRecord<String, String>> stream = getDataStream(IKafkaConstants.AIRPORTS_TOPIC);
-        stream.foreachRDD(rdd ->
-                spark.createDataFrame(
-                        rdd.map(x -> new Airports(x.value().split(","))), Airports.class)
-                        .as(Encoders.bean(Airports.class))
-                        .write()
-                        .partitionBy("country")
-                        .mode(SaveMode.Append)
-                        .parquet(IKafkaConstants.AIRPORTS_DATA_PATH)
-        );
+        stream.foreachRDD(rdd -> {
+            Dataset<Airports> ad = spark.createDataFrame(
+                    rdd.map(x -> new Airports(x.value().split(","))), Airports.class)
+                    .as(Encoders.bean(Airports.class));
+            ad.show(20);
+                    ad.write()
+                    .partitionBy("country")
+                    .mode(SaveMode.Append)
+                    .parquet(IKafkaConstants.AIRPORTS_DATA_PATH);
+        });
     }
 }

@@ -7,8 +7,9 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 public interface IKafkaConstants {
     //String BOOTSTRAP_SERVERS="DESKTOP-2CGEI1G.localdomain:9092";
-    String BOOTSTRAP_SERVERS="15.207.54.81:9092,15.207.54.81:9093";
-    String SCHEMA_REGISTRY_URL="http://15.207.54.81:8081";
+    String EC2_IP="<EC2>";
+    String BOOTSTRAP_SERVERS=EC2_IP+":9092,"+EC2_IP+":9093";
+    String SCHEMA_REGISTRY_URL="http://"+EC2_IP+":8081";
 
     String T0_TOPIC = "T0_Test";
     String USERS_TOPIC = "user";
@@ -19,6 +20,7 @@ public interface IKafkaConstants {
     String AIRPORTS_TOPIC   = "airports_topic";
     String CARRIER_TOPIC    = "carrier_topic";
     String PLANE_DATA_TOPIC = "plane_data_topic";
+    String PLANE_DATA_AVRO_TOPIC = "plane_data_avro_topic";
     String myusertest_TOPIC = "myUserTest1";
     String ORDERS_TOPIC_NEW = "orders_topic";
     String AVRO_USER_TOPIC = "avro_users_topics";
@@ -36,7 +38,7 @@ public interface IKafkaConstants {
     String planeDataCsv     = "C:\\FlightDataSamples\\StatsData\\plane-data.csv";
 
     // Spark related settings
-    String MASTER="local[3]";
+    String MASTER="local[*]";
 
 
     // MongoDB related constants
@@ -44,10 +46,10 @@ public interface IKafkaConstants {
     String Flights_Data_MONGO_DB = "flights_data";
 
     // TODO: Creds list here not safe option revisit other options
-    String MONGO_CONN_STRING = "mongodb+srv://varun:varun123@cluster0-kzpyx.mongodb.net/TestDB)";
+    String MONGO_CONN_STRING = "mongodb+srv://<User>:<pwd>@<cluster>/TestDB)";
 
     // Hive related constants
-    String NAMENODE_PATH_STR="hdfs://ip-172-31-24-191.ap-south-1.compute.internal:8020/";
+    String NAMENODE_PATH_STR="hdfs://<NameNode>:8020/";
     String NAMENODE_PATH=NAMENODE_PATH_STR+"/user/varun/usersDB";
     String FLIGHTDATA_PATH=NAMENODE_PATH_STR+"/user/varun/FlightsDB";
     String PLANE_DATA_PATH=NAMENODE_PATH_STR+"/user/varun/PlanesDataDB";

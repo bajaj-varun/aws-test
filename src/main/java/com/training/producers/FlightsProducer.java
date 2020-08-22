@@ -43,12 +43,11 @@ public class FlightsProducer {
     public static void main(String[] args) {
         FlightsProducer flightsProducer = new FlightsProducer();
           //flightsProducer.rawFlightDataProducer();
-          // flightsProducer.avroFlightDataProducer();
-
+          flightsProducer.avroFlightDataProducer();
           // other Producers
-          flightsProducer.airportsProducer();
+          //flightsProducer.airportsProducer();
            //flightsProducer.carriersProducer();
-          flightsProducer.planeDataProducer();
+
 //        flightsProducer.avroFlightDataProducerTopic2();
 
         flightsProducer._rawProducer.flush();
@@ -91,7 +90,7 @@ public class FlightsProducer {
      * TODO: Key hardcode now but will think on it
      */
     public void avroFlightDataProducer() {
-        /*props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         props.put("schema.registry.url", IKafkaConstants.SCHEMA_REGISTRY_URL);
 
         KafkaProducer _avroProducer = new KafkaProducer(props);
@@ -105,7 +104,7 @@ public class FlightsProducer {
                 else
                     System.out.println(recordMetadata.toString());
             });
-        }*/
+        }
     }
 
     public void avroFlightDataProducerTopic2() {
@@ -142,23 +141,6 @@ public class FlightsProducer {
             _rawProducer.send(pr, (recordMetadata, e) -> {
                 System.out.println(IKafkaConstants.CARRIER_TOPIC+" "+recordMetadata.toString());
             });
-        }
-    }
-
-    void planeDataProducer() {
-        for (String row : getRawData(IKafkaConstants.planeDataCsv)) {
-            //System.out.println(row);
-            ProducerRecord<String, String> pr = new ProducerRecord(IKafkaConstants.PLANE_DATA_TOPIC, "planeData", row);
-            try {
-                _rawProducer.send(pr, (recordMetadata, e) -> {
-                    if(e==null)
-                        System.out.println(IKafkaConstants.PLANE_DATA_TOPIC+" "+recordMetadata.toString());
-                    else
-                        e.printStackTrace();
-                }).get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

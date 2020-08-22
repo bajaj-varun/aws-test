@@ -1,0 +1,16 @@
+{
+  "namespace": "com.training.pojos.generatedSources",
+  "type": "record",
+  "name": "PlanesDataAvroSchema",
+  "fields": [
+    {"name": "tailnum",        "type": "string"},
+    {"name": "type",               "type": "string"},
+    {"name": "manufacturer",          "type": "string"},
+    {"name": "issue_date",           "type": "string"},
+    {"name": "model",             "type": "string"},
+    {"name": "status",          "type": "string"},
+    {"name": "aircraft_type",             "type": "string"},
+    {"name": "engine_type",          "type": "string"},
+    {"name": "year",       "type": "int"}
+  ]
+}

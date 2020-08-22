@@ -86,8 +86,10 @@ public class FligthsStreamConsumer implements Serializable {
                         .equalTo(dsPd.col("tailnum")))
                         .show(20);
             });*/
-            fd.write().partitionBy("year")
-                    .mode(SaveMode.Append).parquet(IKafkaConstants.FLIGHTDATA_PATH);
+            fd.printSchema();
+            fd.show(20);
+            /*fd.write().partitionBy("year")
+                    .mode(SaveMode.Append).parquet(IKafkaConstants.FLIGHTDATA_PATH);*/
             //fd.show(20);
         });
     }
