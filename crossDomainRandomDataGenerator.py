@@ -61,7 +61,7 @@ config.read('resources/data.config')
 rd = RandomDataGenerator()
 rd.readSourceFile(sys.argv[1])
 dTime = datetime.now().strftime("%Y%m%d_%H:%M:%S")
-aSess = rd.getAssumedSession("arn:aws:iam::530511986457:role/varuntest_crossdomain_trust_role")
+aSess = rd.getAssumedSession("<ARN ROLE>")
 s3 = boto3.client(
     's3',
     aws_access_key_id=aSess['AccessKeyId'],
