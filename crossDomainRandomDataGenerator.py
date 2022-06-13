@@ -41,7 +41,7 @@ class RandomDataGenerator:
         sts_client = boto3.client('sts')
         assumed_role_object = sts_client.assume_role(
             RoleArn=arn,
-            RoleSessionName="varunTest-crossdomain-wipro"
+            RoleSessionName="varunTest-crossdomain"
         )
         credentials = assumed_role_object['Credentials']
         return credentials
