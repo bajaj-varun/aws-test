@@ -9,7 +9,6 @@ def lambda_handler(event, context):
     role_name = event['RoleName']
     account_id = event['AccountId']
 
-    # Following trust relationship policy can be used to provide access to assume this role by a particular IAM user from different AWS acccount
     trust_relationship_policy_another_iam_user = {
         "Version": "2012-10-17",
         "Statement": [
@@ -23,9 +22,7 @@ def lambda_handler(event, context):
         ]
     }
 
-    #Following trust relationship policy can be used to provide access to assume this role by a particular AWS service in the same account
-
-    trust_relationship_policy_another_aws_service = {
+   trust_relationship_policy_another_aws_service = {
         "Version": "2012-10-17",
         "Statement": [
             {
