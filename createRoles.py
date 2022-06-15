@@ -15,7 +15,7 @@ def lambda_handler(event, context):
             {
                 "Effect": "Allow",
                 "Principal": {
-                    "AWS": "arn:aws:iam::087851441689:user/<REPLACE_WITH_USER_NAME>"
+                    "AWS": "arn:aws:iam::<ACCOUNT>:user/<REPLACE_WITH_USER_NAME>"
                 },
                 "Action": "sts:AssumeRole"
             }
@@ -28,7 +28,7 @@ def lambda_handler(event, context):
             {
                 "Effect": "Allow",
                 "Principal": {
-                    "Service": "ec2.amazonaws.com"
+                    "Service": "ec2"
                 },
                 "Action": "sts:AssumeRole"
             }
@@ -42,8 +42,8 @@ def lambda_handler(event, context):
             Description='This is a test role',
             Tags=[
                 {
-                    'Key': 'Owner',
-                    'Value': 'msb'
+                    'Key': '<>',
+                    'Value': '<>'
                 }
             ]
         )
